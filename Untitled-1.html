@@ -1,60 +1,2409 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viva em Rede</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Viva em Rede - Educação para Todos</title>
     <style>
-        .hero-section {
-            background: linear-gradient(#00000080, rgba(60, 117, 53, 0.5)), url("img/cultivo.jpg") no-repeat center center;
-            background-size: cover;
-            height: 60vh;
-            color: rgb(255, 255, 255);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: hsl(85, 25%, 45%);
+            --color-primary-light: hsl(85, 30%, 55%);
+            --color-primary-dark: hsl(85, 30%, 35%);
+            --color-primary-foreground: hsl(0, 0%, 100%);
+            
+            --color-secondary: hsl(45, 20%, 85%);
+            --color-secondary-foreground: hsl(0, 0%, 10%);
+            
+            --color-background: hsl(45, 30%, 98%);
+            --color-foreground: hsl(0, 0%, 10%);
+            
+            --color-muted: hsl(45, 15%, 92%);
+            --color-muted-foreground: hsl(0, 0%, 40%);
+            
+            --color-card: hsl(0, 0%, 100%);
+            --color-card-foreground: hsl(0, 0%, 10%);
+            
+            --color-border: hsl(45, 20%, 90%);
+            --color-input: hsl(0, 0%, 100%);
+            
+            --color-success: hsl(120, 50%, 45%);
+            --color-error: hsl(0, 84%, 60%);
+            --color-warning: hsl(38, 92%, 50%);
+            
+            --radius: 0.5rem;
+            --radius-lg: 1rem;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 400;
+            color: var(--color-foreground);
+            background-color: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        #root {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--color-primary-dark);
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: inherit;
+            transition: all 0.2s ease;
+        }
+
+        input, textarea, select {
+            font-family: inherit;
+            font-size: inherit;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+            background-color: var(--color-input);
+            color: var(--color-foreground);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(133, 153, 76, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .flex {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .flex-center {
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-center {
             text-align: center;
         }
-        .card-img-top {
+
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-3xl { font-size: 2rem; }
+
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .font-medium { font-weight: 500; }
+
+        .text-muted { color: var(--color-muted-foreground); }
+
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 0.75rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+
+        .rounded { border-radius: var(--radius); }
+        .rounded-lg { border-radius: var(--radius-lg); }
+
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+
+        /* Header */
+        header {
+            background-color: var(--color-card);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-desktop {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--color-foreground);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .login-btn:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        .dashboard-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--color-secondary);
+            color: var(--color-secondary-foreground);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--color-error);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .menu-button {
+            display: none;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--color-foreground);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: var(--color-muted);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .mobile-link {
+            color: var(--color-foreground);
+            text-decoration: none;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .mobile-link:hover {
+            background-color: var(--color-border);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--color-foreground);
+            color: var(--color-primary-foreground);
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-subtitle {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-primary-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-description {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .footer-link:hover {
+            color: var(--color-primary-light);
+        }
+
+        .footer-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social-link {
+            color: var(--color-primary-light);
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-social-link:hover {
+            color: var(--color-primary-foreground);
+        }
+
+        .footer-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 2rem 0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* Pages */
+        .page {
+            padding: 2rem 0;
+            min-height: calc(100vh - 70px);
+            background-color: var(--color-background);
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: var(--color-muted-foreground);
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: var(--color-background);
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .hero-text {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: var(--color-muted-foreground);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            padding: 1rem 2rem;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .primary-btn:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        .secondary-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--color-secondary);
+            color: var(--color-secondary-foreground);
+            padding: 1rem 2rem;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .secondary-btn:hover {
+            background-color: hsl(45, 20%, 75%);
+        }
+
+        .hero-image {
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 4rem 0;
+            background-color: var(--color-card);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--color-muted-foreground);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background-color: var(--color-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .benefit-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background-color: var(--color-secondary);
+            border-radius: var(--radius-lg);
+            margin: 0 auto 1rem;
+        }
+
+        .benefit-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            margin-bottom: 0.75rem;
+        }
+
+        .benefit-description {
+            font-size: 0.875rem;
+            color: var(--color-muted-foreground);
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 0;
+            background-color: var(--color-background);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--color-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--color-muted-foreground);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 4rem 0;
+            background-color: var(--color-card);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--color-background);
+            border-radius: var(--radius-lg);
+            transition: transform 0.2s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .step-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            color: var(--color-muted-foreground);
+            font-size: 0.95rem;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 4rem 0;
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+        }
+
+        .cta-content {
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--color-primary-foreground);
+            color: var(--color-primary);
+            padding: 1rem 2rem;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Video Card */
+        .video-card {
+            background-color: var(--color-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background-color: var(--color-muted);
+            overflow: hidden;
+        }
+
+        .video-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;object-fit: cover;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .video-card:hover .video-overlay {
+            opacity: 1;
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .video-content {
+            padding: 1rem;
+        }
+
+        .video-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-foreground);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .video-description {
+            font-size: 0.875rem;
+            color: var(--color-muted-foreground);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-grade {
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .video-subject {
+            background-color: var(--color-secondary);
+            color: var(--color-secondary-foreground);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .video-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius);
+            border: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            color: var(--color-foreground);
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Teacher Card */
+        .teacher-card {
+            background-color: var(--color-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .teacher-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .teacher-image-container {
+            width: 100%;
             height: 200px;
+            background-color: var(--color-muted);
+            overflow: hidden;
+        }
+
+        .teacher-image {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+        }
+
+        .teacher-content {
+            padding: 1.5rem;
+        }
+
+        .teacher-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .teacher-specialty {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .teacher-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .teacher-info-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+        }
+
+        .teacher-label {
+            font-weight: 600;
+            color: var(--color-foreground);
+        }
+
+        .teacher-availability {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-muted-foreground);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .teacher-bio {
+            font-size: 0.875rem;
+            color: var(--color-muted-foreground);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .schedule-btn {
+            width: 100%;
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .schedule-btn:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        /* School Card */
+        .school-card {
+            background-color: var(--color-card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .school-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .school-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1.5rem;
+        }
+
+        .school-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            flex: 1;
+        }
+
+        .school-badge {
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .school-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .school-info-item {
+            display: flex;
+            gap: 1rem;
+            color: var(--color-muted-foreground);
+        }
+
+        .school-description {
+            font-size: 0.875rem;
+            color: var(--color-muted-foreground);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .request-btn {
+            width: 100%;
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .request-btn:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal {
+            background-color: var(--color-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+        }
+
+        .modal-close {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--color-muted-foreground);
+            padding: 0.5rem;
+        }
+
+        .modal-form {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            color: var(--color-foreground);
+            background-color: var(--color-input);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            color: var(--color-foreground);
+            background-color: var(--color-input);
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background-color: var(--color-muted);
+            color: var(--color-foreground);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .cancel-btn:hover {
+            background-color: hsl(45, 15%, 82%);
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        /* Login Page */
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 70px);
+            background-color: var(--color-background);
+            padding: 2rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background-color: var(--color-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--color-muted-foreground);
+            font-size: 0.95rem;
+        }
+
+        .demo-info {
+            background-color: var(--color-secondary);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .demo-title {
+            font-weight: 600;
+            color: var(--color-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-text {
+            color: var(--color-muted-foreground);
+            margin: 0.25rem 0;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .error-message {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--color-error);
+            color: white;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+
+        .login-footer {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .login-footer-text {
+            font-size: 0.875rem;
+            color: var(--color-muted-foreground);
+        }
+
+        .toggle-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--color-primary);
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Dashboard */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .user-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-info-card {
+            background-color: var(--color-card);
+            padding: 1rem;
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-muted-foreground);
+            text-transform: uppercase;
+        }
+
+        .user-info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-foreground);
+        }
+
+        .stats-grid-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card-dashboard {
+            background-color: var(--color-card);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .stat-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background-color: var(--color-secondary);
+            border-radius: var(--radius-lg);
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title-dashboard {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            margin-bottom: 1.5rem;
+        }
+
+        .classes-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .class-card {
+            background-color: var(--color-card);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .class-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .class-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+        }
+
+        .class-date {
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .class-subject {
+            color: var(--color-muted-foreground);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .class-time {
+            color: var(--color-muted-foreground);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .class-notes {
+            color: var(--color-muted-foreground);
+            font-size: 0.875rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .empty-state {
+            background-color: var(--color-card);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            color: var(--color-muted-foreground);
+        }
+
+        .empty-link {
+            display: inline-block;
+            margin-top: 1rem;
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .tips-section {
+            margin-bottom: 3rem;
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-card {
+            background-color: var(--color-card);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+        }
+
+        .tip-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .tip-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-text {
+            color: var(--color-muted-foreground);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.3s ease-out;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-desktop {
+                display: none;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+            }.hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .primary-btn, .secondary-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page-title {
+                font-size: 1.75rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .cta-title {
+                font-size: 1.75rem;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logout-btn {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
+    <div id="root">
+        <header>
+            <div class="header-container container">
+                <a href="#" class="logo" onclick="app.navigate('home'); return false;">
+                    <span class="logo-text">Viva em Rede</span>
+                </a>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand font-weight-bold" href="#">VIVA EM <span class="text-align">REDE</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="">Eventos</a></li>
-                    <li class="nav-item"><a class="nav-link" href=""></a></li>
-                </ul>
+                <nav class="nav-desktop">
+                    <a href="#" class="nav-link" onclick="app.navigate('videoaulas'); return false;">Videoaulas</a>
+                    <a href="#" class="nav-link" onclick="app.navigate('professores'); return false;">Professores</a>
+                    <a href="#" class="nav-link" onclick="app.navigate('vagas'); return false;">Vagas</a>
+                    <a href="#" class="nav-link" onclick="app.navigate('contato'); return false;">Contato</a>
+                </nav>
+
+                <div class="auth-buttons">
+                    <div id="auth-desktop"></div>
+                </div>
+
+                <button class="menu-button" onclick="app.toggleMobileMenu()">
+                    <span id="menu-icon">☰</span>
+                </button>
             </div>
-        </div>
-    </nav>
 
-    <header class="hero-section">
-        <div class="container">
-            <h1 class="display-3 fw-bold">Projeto "Viva em Rede"</h1>
-        </div>
-    </header>
+            <nav class="mobile-menu hidden" id="mobile-menu">
+                <a href="#" class="mobile-link" onclick="app.navigate('videoaulas'); app.toggleMobileMenu(); return false;">Videoaulas</a>
+                <a href="#" class="mobile-link" onclick="app.navigate('professores'); app.toggleMobileMenu(); return false;">Professores</a>
+                <a href="#" class="mobile-link" onclick="app.navigate('vagas'); app.toggleMobileMenu(); return false;">Vagas</a>
+                <a href="#" class="mobile-link" onclick="app.navigate('contato'); app.toggleMobileMenu(); return false;">Contato</a>
+                <div id="auth-mobile"></div>
+            </nav>
+        </header>
 
- <h4> <p class="text-center">Sobre o Projeto "Viva em Rede"</p> </h4>
-      <p class="text-center">O projeto "Viva em Rede" foi feito para ajudar moradore de comunidades e dar benefícios a eventos gratuitos ao alcance depedendo de sua região.</p> 
- 
-    <footer class="bg-dark text-white text-center py-4">
+        <main id="main-content"></main>
 
-        <p>&copy; 2026 Projeto Integrador</p>
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3 class="footer-title">Viva em Rede</h3>
+                        <p class="footer-description">
+                            Transformando vidas através da educação inclusiva e acessível para adolescentes e adultos que desejam completar sua escolaridade.
+                        </p>
+                    </div>
 
-    </footer>
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Links Rápidos</h4>
+                        <ul class="footer-list">
+                            <li><a href="#" class="footer-link" onclick="app.navigate('videoaulas'); return false;">Videoaulas</a></li>
+                            <li><a href="#" class="footer-link" onclick="app.navigate('professores'); return false;">Professores</a></li>
+                            <li><a href="#" class="footer-link" onclick="app.navigate('vagas'); return false;">Vagas</a></li>
+                            <li><a href="#" class="footer-link" onclick="app.navigate('contato'); return false;">Contato</a></li>
+                        </ul>
+                    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Contato</h4>
+                        <div class="footer-contact-item">
+                            <span>📧</span>
+                            <span>contato@vivaemedrede.com</span>
+                        </div>
+                        <div class="footer-contact-item">
+                            <span>📞</span>
+                            <span>(11) 3000-0000</span>
+                        </div>
+                        <div class="footer-contact-item">
+                            <span>📍</span>
+                            <span>São Paulo, SP - Brasil</span>
+                        </div>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Siga-nos</h4>
+                        <div class="footer-social-links">
+                            <a href="#" class="footer-social-link" title="Facebook">f</a>
+                            <a href="#" class="footer-social-link" title="Instagram">📷</a>
+                            <a href="#" class="footer-social-link" title="LinkedIn">in</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-divider"></div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Viva em Rede. Todos os direitos reservados.</p>
+                    <p>Educação para todos, sem exceção.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // App State
+        const app = {
+            currentPage: 'home',
+            user: null,
+            mobileMenuOpen: false,
+
+            // Initialize
+            init() {
+                this.loadUser();
+                this.renderAuthButtons();
+                this.navigate('home');
+            },
+
+            // Navigation
+            navigate(page) {
+                this.currentPage = page;
+                this.render();
+                window.scrollTo(0, 0);
+            },
+
+            // User Management
+            loadUser() {
+                const saved = localStorage.getItem('vivaemedrede_user');
+                if (saved) {
+                    this.user = JSON.parse(saved);
+                }
+            },
+
+            login(email, password) {
+                if (email === 'demo@vivaemedrede.com' && password === 'demo123') {
+                    this.user = {
+                        id: '1',
+                        name: 'Maria Silva',
+                        email: 'demo@vivaemedrede.com',
+                        grade: '2º ano',
+                        joinDate: '2024-01-15'
+                    };
+                } else {
+                    this.user = {
+                        id: Date.now().toString(),
+                        name: email.split('@')[0],
+                        email,
+                        grade: '1º ano',
+                        joinDate: new Date().toISOString().split('T')[0]
+                    };
+                }
+                localStorage.setItem('vivaemedrede_user', JSON.stringify(this.user));
+                this.renderAuthButtons();
+                return true;
+            },
+
+            logout() {
+                this.user = null;
+                localStorage.removeItem('vivaemedrede_user');
+                this.renderAuthButtons();
+                this.navigate('home');
+            },
+
+            // Mobile Menu
+            toggleMobileMenu() {
+                this.mobileMenuOpen = !this.mobileMenuOpen;
+                const menu = document.getElementById('mobile-menu');
+                const icon = document.getElementById('menu-icon');
+                if (this.mobileMenuOpen) {
+                    menu.classList.remove('hidden');
+                    icon.textContent = '✕';
+                } else {
+                    menu.classList.add('hidden');
+                    icon.textContent = '☰';
+                }
+            },
+
+            // Render Auth Buttons
+            renderAuthButtons() {
+                const desktopAuth = document.getElementById('auth-desktop');
+                const mobileAuth = document.getElementById('auth-mobile');
+
+                if (this.user) {
+                    desktopAuth.innerHTML = `
+                        <button class="dashboard-btn" onclick="app.navigate('dashboard'); return false;">
+                            📊 Dashboard
+                        </button>
+                        <button class="logout-btn" onclick="app.logout(); return false;">
+                            🚪 Sair
+                        </button>
+                    `;
+                    mobileAuth.innerHTML = `
+                        <a href="#" class="mobile-link" onclick="app.navigate('dashboard'); app.toggleMobileMenu(); return false;">Dashboard</a>
+                        <button class="logout-btn" onclick="app.logout(); app.toggleMobileMenu(); return false;">Sair</button>
+                    `;
+                } else {
+                    desktopAuth.innerHTML = `
+                        <button class="login-btn" onclick="app.navigate('login'); return false;">Entrar</button>
+                    `;
+                    mobileAuth.innerHTML = `
+                        <a href="#" class="mobile-link" onclick="app.navigate('login'); app.toggleMobileMenu(); return false;">Entrar</a>
+                    `;
+                }
+            },
+
+            // Main Render
+            render() {
+                const main = document.getElementById('main-content');
+                
+                switch(this.currentPage) {
+                    case 'home':
+                        main.innerHTML = this.renderHome();
+                        break;
+                    case 'videoaulas':
+                        main.innerHTML = this.renderVideoaulas();
+                        break;
+                    case 'professores':
+                        main.innerHTML = this.renderProfessores();
+                        break;
+                    case 'vagas':
+                        main.innerHTML = this.renderVagas();
+                        break;
+                    case 'contato':
+                        main.innerHTML = this.renderContato();
+                        break;
+                    case 'login':
+                        main.innerHTML = this.renderLogin();
+                        break;
+                    case 'dashboard':
+                        if (!this.user) {
+                            this.navigate('login');
+                        } else {
+                            main.innerHTML = this.renderDashboard();
+                        }
+                        break;
+                    default:
+                        main.innerHTML = this.renderHome();
+                }
+            },
+
+            // Pages
+            renderHome() {
+                return `
+                    <div class="page">
+                        <!-- Hero -->
+                        <section class="hero">
+                            <div class="container hero-content">
+                                <div class="hero-text">
+                                    <h1 class="hero-title">Educação para Todos, Sem Exceção</h1>
+                                    <p class="hero-subtitle">
+                                        Viva em Rede oferece uma oportunidade real para adolescentes e adultos completarem sua escolaridade com videoaulas, professores dedicados e mentores disponíveis 24/7.
+                                    </p>
+                                    <div class="hero-cta">
+                                        <button class="primary-btn" onclick="app.navigate('videoaulas'); return false;">
+                                            ▶️ Explorar Videoaulas
+                                        </button>
+                                        <button class="secondary-btn" onclick="app.navigate('contato'); return false;">
+                                            Inscrever-se Agora →
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="hero-image">
+                                    <img src="https://images.unsplash.com/photo-1522202176988-696ce0213ce0?w=600&h=400&fit=crop" alt="Estudantes aprendendo">
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Benefits -->
+                        <section class="benefits">
+                            <div class="container">
+                                <h2 class="section-title">Por que Viva em Rede?</h2>
+                                <p class="section-subtitle">Oferecemos uma abordagem completa e inclusiva para sua educação</p>
+                                <div class="benefits-grid">
+                                    <div class="benefit-card">
+                                        <div class="benefit-icon-container">📚</div>
+                                        <h3 class="benefit-title">Videoaulas Completas</h3>
+                                        <p class="benefit-description">Biblioteca com centenas de videoaulas organizadas por série e disciplina, acessíveis a qualquer hora.</p>
+                                    </div>
+                                    <div class="benefit-card">
+                                        <div class="benefit-icon-container">👨‍🏫</div>
+                                        <h3 class="benefit-title">Professores Dedicados</h3>
+                                        <p class="benefit-description">Professores qualificados disponíveis para aulas particulares e esclarecimento de dúvidas.</p>
+                                    </div>
+                                    <div class="benefit-card">
+                                        <div class="benefit-icon-container">🎯</div>
+                                        <h3 class="benefit-title">Mentoria Personalizada</h3>
+                                        <p class="benefit-description">Mentores experientes para orientar seu caminho educacional e desenvolvimento pessoal.</p>
+                                    </div>
+                                    <div class="benefit-card">
+                                        <div class="benefit-icon-container">⚡</div>
+                                        <h3 class="benefit-title">100% Gratuito</h3>
+                                        <p class="benefit-description">Toda a plataforma é completamente gratuita. Nenhuma taxa, nenhuma cobrança.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section><!-- Stats -->
+                        <section class="stats">
+                            <div class="container">
+                                <h2 class="section-title">Nosso Impacto</h2>
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div>
+                                            <div class="stat-number">2,500+</div>
+                                            <div class="stat-label">Estudantes Ajudados</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div>
+                                            <div class="stat-number">500+</div>
+                                            <div class="stat-label">Videoaulas Disponíveis</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div>
+                                            <div class="stat-number">50+</div>
+                                            <div class="stat-label">Professores e Mentores</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div>
+                                            <div class="stat-number">100%</div>
+                                            <div class="stat-label">Gratuito</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- How It Works -->
+                        <section class="how-it-works">
+                            <div class="container">
+                                <h2 class="section-title">Como Funciona</h2>
+                                <div class="steps-grid">
+                                    <div class="step">
+                                        <div class="step-number">1</div>
+                                        <h3 class="step-title">Inscreva-se</h3>
+                                        <p class="step-description">Crie sua conta gratuitamente em poucos minutos</p>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">2</div>
+                                        <h3 class="step-title">Escolha seu Caminho</h3>
+                                        <p class="step-description">Acesse videoaulas ou agende aulas com professores</p>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">3</div>
+                                        <h3 class="step-title">Aprenda no Seu Ritmo</h3>
+                                        <p class="step-description">Estude quando quiser, onde quiser, sem pressão</p>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">4</div>
+                                        <h3 class="step-title">Conclua sua Escolaridade</h3>
+                                        <p class="step-description">Alcance seus objetivos educacionais com sucesso</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Final CTA -->
+                        <section class="final-cta">
+                            <div class="container cta-content">
+                                <h2 class="cta-title">Pronto para Transformar sua Vida?</h2>
+                                <p class="cta-subtitle">Junte-se a milhares de estudantes que já estão completando sua escolaridade com Viva em Rede</p>
+                                <button class="cta-button" onclick="app.navigate('contato'); return false;">Começar Agora</button>
+                            </div>
+                        </section>
+                    </div>
+                `;
+            },
+
+            renderVideoaulas() {
+                const videos = [
+                    { id: '1', title: 'Introdução à Literatura Brasileira', description: 'Conheça os principais movimentos literários do Brasil', grade: '1º ano', subject: 'Português', duration: '15:30', thumbnail: 'https://images.unsplash.com/photo-1507842217343-583f20270319?w=400&h=225&fit=crop' },
+                    { id: '2', title: 'Equações do 2º Grau', description: 'Aprenda a resolver equações quadráticas passo a passo', grade: '1º ano', subject: 'Matemática', duration: '22:45', thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=400&h=225&fit=crop' },
+                    { id: '3', title: 'História do Brasil Colonial', description: 'Entenda o período colonial brasileiro e suas consequências', grade: '2º ano', subject: 'História', duration: '18:20', thumbnail: 'https://images.unsplash.com/photo-1507842217343-583f20270319?w=400&h=225&fit=crop' },
+                    { id: '4', title: 'Biologia Celular', description: 'Estrutura e funções das células vivas', grade: '1º ano', subject: 'Ciências', duration: '25:10', thumbnail: 'https://images.unsplash.com/photo-1576091160550-112173f7f869?w=400&h=225&fit=crop' },
+                    { id: '5', title: 'Geopolítica Mundial', description: 'Conflitos e relações internacionais contemporâneas', grade: '3º ano', subject: 'Geografia', duration: '20:15', thumbnail: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=400&h=225&fit=crop' },
+                    { id: '6', title: 'Verbos em Inglês', description: 'Conjugação e uso dos principais verbos em inglês', grade: '2º ano', subject: 'Inglês', duration: '16:40', thumbnail: 'https://images.unsplash.com/photo-1456406546174-1ec5dcad823d?w=400&h=225&fit=crop' }
+                ];
+
+                return `
+                    <div class="page">
+                        <div class="container">
+                            <div class="page-header">
+                                <h1 class="page-title">Videoaulas</h1>
+                                <p class="page-subtitle">Acesse nossa biblioteca completa de videoaulas organizadas por série e disciplina</p>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+                                ${videos.map(video => `
+                                    <div class="video-card" onclick="app.playVideo('${video.title}', '${video.thumbnail}')">
+                                        <div class="video-thumbnail">
+                                            <img src="${video.thumbnail}" alt="${video.title}" class="video-image">
+                                            <div class="video-overlay">▶️</div>
+                                            <div class="video-duration">${video.duration}</div>
+                                        </div>
+                                        <div class="video-content">
+                                            <h3 class="video-title">${video.title}</h3>
+                                            <p class="video-description">${video.description}</p>
+                                            <div class="video-meta">
+                                                <span class="video-grade">${video.grade}</span>
+                                                <span class="video-subject">${video.subject}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderProfessores() {
+                const teachers = [
+                    { id: '1', name: 'Maria Silva', specialty: 'Português e Literatura', grades: '1º, 2º, 3º ano', experience: '8 anos', availability: 'Seg-Sex, 14h-20h', bio: 'Professora apaixonada por literatura brasileira com experiência em educação inclusiva.', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop' },
+                    { id: '2', name: 'João Santos', specialty: 'Matemática', grades: '1º, 2º, 3º ano', experience: '10 anos', availability: 'Seg-Sab, 10h-22h', bio: 'Especialista em equações e funções, com metodologia prática e didática.', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop' },
+                    { id: '3', name: 'Ana Costa', specialty: 'História e Geografia', grades: '1º, 2º, 3º ano', experience: '6 anos', availability: 'Ter-Sab, 15h-21h', bio: 'Historiadora dedicada a tornar a história viva e relevante para os alunos.', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop' },
+                    { id: '4', name: 'Carlos Oliveira', specialty: 'Ciências e Biologia', grades: '1º, 2º ano', experience: '7 anos', availability: 'Seg-Sex, 13h-19h', bio: 'Biólogo apaixonado por ensinar os mistérios da vida e da natureza.', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop' },
+                    { id: '5', name: 'Lucia Ferreira', specialty: 'Geografia e Geopolítica', grades: '2º, 3º ano', experience: '9 anos', availability: 'Seg-Sab, 14h-20h', bio: 'Geógrafa especializada em geopolítica e relações internacionais.', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop' },
+                    { id: '6', name: 'Rafael Almeida', specialty: 'Inglês', grades: '1º, 2º, 3º ano', experience: '5 anos', availability: 'Seg-Sab, 16h-22h', bio: 'Professor de inglês com experiência internacional e metodologia comunicativa.', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop' }
+                ];
+
+                return `
+                    <div class="page">
+                        <div class="container">
+                            <div class="page-header">
+                                <h1 class="page-title">Professores e Mentores</h1>
+                                <p class="page-subtitle">Conheça nossos professores qualificados disponíveis para aulas particulares</p>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
+                                ${teachers.map(teacher => `
+                                    <div class="teacher-card">
+                                        <div class="teacher-image-container">
+                                            <img src="${teacher.image}" alt="${teacher.name}" class="teacher-image">
+                                        </div>
+                                        <div class="teacher-content">
+                                            <h3 class="teacher-name">${teacher.name}</h3>
+                                            <div class="teacher-specialty">🎓 ${teacher.specialty}</div>
+                                            <div class="teacher-info">
+                                                <div class="teacher-info-item">
+                                                    <span class="teacher-label">Séries:</span>
+                                                    <span>${teacher.grades}</span>
+                                                </div>
+                                                <div class="teacher-info-item">
+                                                    <span class="teacher-label">Experiência:</span>
+                                                    <span>${teacher.experience}</span>
+                                                </div>
+                                            </div>
+                                            <div class="teacher-availability">⏰ ${teacher.availability}</div>
+                                            <p class="teacher-bio">${teacher.bio}</p>
+                                            <button class="schedule-btn" onclick="app.scheduleTeacher('${teacher.name}'); return false;">📅 Agendar Aula</button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderVagas() {
+                const schools = [
+                    { id: '1', name: 'Escola Municipal Santos Dumont', location: 'Rua das Flores, 123 - São Paulo, SP', grades: '1º, 2º, 3º ano', hours: 'Seg-Sex, 14h-18h', slots: 15, contact: '(11) 3000-0001', description: 'Escola pública com infraestrutura moderna e professores dedicados ao ensino inclusivo.' },
+                    { id: '2', name: 'Colégio Estadual Machado de Assis', location: 'Av. Paulista, 456 - São Paulo, SP', grades: '1º, 2º, 3º ano', hours: 'Seg-Sex, 15h-19h', slots: 20, contact: '(11) 3000-0002', description: 'Colégio tradicional com excelente corpo docente e ambiente acolhedor.' },
+                    { id: '3', name: 'Centro Educacional Vila Nova', location: 'Rua da Paz, 789 - São Paulo, SP', grades: '1º, 2º ano', hours: 'Seg-Sab, 13h-17h', slots: 10, contact: '(11) 3000-0003', description: 'Centro educacional comunitário focado em educação inclusiva e acessível.' },
+                    { id: '4', name: 'Escola Comunitária Esperança', location: 'Rua da Esperança, 321 - São Paulo, SP', grades: '1º, 2º, 3º ano', hours: 'Seg-Sex, 14h-20h', slots: 25, contact: '(11) 3000-0004', description: 'Escola comunitária com forte compromisso com a educação de qualidade para todos.' },
+                    { id: '5', name: 'Instituto de Ensino Popular', location: 'Av. Brasil, 654 - São Paulo, SP', grades: '2º, 3º ano', hours: 'Seg-Sab, 16h-20h', slots: 12, contact: '(11) 3000-0005', description: 'Instituto dedicado ao ensino popular com metodologia inovadora e acessível.' }
+                ];
+
+                return `
+                    <div class="page">
+                        <div class="container">
+                            <div class="page-header">
+                                <h1 class="page-title">Vagas em Escolas</h1>
+                                <p class="page-subtitle">Conheça nossas escolas parceiras com vagas disponíveis para aulas extras</p>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+                                ${schools.map(school => `
+                                    <div class="school-card">
+                                        <div class="school-header">
+                                            <h3 class="school-name">${school.name}</h3>
+                                            <span class="school-badge">${school.slots} vagas</span>
+                                        </div>
+                                        <div class="school-info">
+                                            <div class="school-info-item">
+                                                <span>📍</span>
+                                                <div>
+                                                    <div style="font-size: 0.75rem; font-weight: 600; color: var(--color-muted-foreground); text-transform: uppercase;">Localização</div>
+                                                    <p style="font-size: 0.95rem; color: var(--color-foreground); font-weight: 500; margin-top: 0.25rem;">${school.location}</p>
+                                                </div>
+                                            </div>
+                                            <div class="school-info-item">
+                                                <span>📚</span>
+                                                <div>
+                                                    <div style="font-size: 0.75rem; font-weight: 600; color: var(--color-muted-foreground); text-transform: uppercase;">Séries Atendidas</div>
+                                                    <p style="font-size: 0.95rem; color: var(--color-foreground); font-weight: 500; margin-top: 0.25rem;">${school.grades}</p>
+                                                </div>
+                                            </div>
+                                            <div class="school-info-item">
+                                                <span>⏰</span>
+                                                <div>
+                                                    <div style="font-size: 0.75rem; font-weight: 600; color: var(--color-muted-foreground); text-transform: uppercase;">Horários</div>
+                                                    <p style="font-size: 0.95rem; color: var(--color-foreground); font-weight: 500; margin-top: 0.25rem;">${school.hours}</p>
+                                                </div>
+                                            </div>
+                                            <div class="school-info-item">
+                                                <span>📞</span>
+                                                <div>
+                                                    <div style="font-size: 0.75rem; font-weight: 600; color: var(--color-muted-foreground); text-transform: uppercase;">Contato</div>
+                                                    <p style="font-size: 0.95rem; color: var(--color-foreground); font-weight: 500; margin-top: 0.25rem;">${school.contact}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="school-description">${school.description}</p>
+                                        <button class="request-btn" onclick="app.requestSchool('${school.name}'); return false;">Solicitar Vaga</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderContato() {
+                return `
+                    <div class="page">
+                        <div class="container">
+                            <div class="page-header">
+                                <h1 class="page-title">Contato e Inscrição</h1>
+                                <p class="page-subtitle">Entre em contato conosco ou inscreva-se para começar sua jornada educacional</p>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 3rem;">
+                                <div style="background-color: var(--color-card); padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); height: fit-content;">
+                                    <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--color-foreground); margin-bottom: 1.5rem;">Informações de Contato</h2>
+                                    
+                                    <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+                                        <div style="display: flex; gap: 1rem;">
+                                            <span style="color: var(--color-primary); font-size: 1.5rem;">📧</span><div>
+                                                <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--color-muted-foreground); text-transform: uppercase; letter-spacing: 0.5px;">Email</h3>
+                                                <p style="font-size: 1rem; color: var(--color-foreground); font-weight: 500; margin-top: 0.25rem;">contato@vivaemedrede.com</p>
+                                            </div>
+                                        </div>
+
+                                        <div style="display: flex; gap: 1rem;">
+                                            <span style="color: var(--color-primary); font-size: 1.5rem;">📞</span>
+                                            <div>
+                                                <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--color-muted-foreground); text-transform: uppercase; letter-spacing: 0.5px;">Telefone</h3>
+                                                <p style="font-size: 1rem; color: var(--color-foreground); font-weight: 500; margin-top: 0.25rem;">(11) 3000-0000</p>
+                                            </div>
+                                        </div>
+
+                                        <div style="display: flex; gap: 1rem;">
+                                            <span style="color: var(--color-primary); font-size: 1.5rem;">📍</span>
+                                            <div>
+                                                <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--color-muted-foreground); text-transform: uppercase; letter-spacing: 0.5px;">Localização</h3>
+                                                <p style="font-size: 1rem; color: var(--color-foreground); font-weight: 500; margin-top: 0.25rem;">São Paulo, SP - Brasil</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="padding-top: 2rem; border-top: 1px solid var(--color-border); color: var(--color-muted-foreground); font-size: 0.95rem;">
+                                        <h3 style="font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Horário de Atendimento</h3>
+                                        <p>Segunda a Sexta: 9h - 18h</p>
+                                        <p>Sábado: 10h - 14h</p>
+                                        <p>Domingo: Fechado</p>
+                                    </div>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                    <div style="background-color: var(--color-card); padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow);">
+                                        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--color-foreground); margin-bottom: 1.5rem;">Inscreva-se Agora</h2>
+                                        <form onsubmit="app.submitSignup(event); return false;" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                            <div>
+                                                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Nome Completo *</label>
+                                                <input type="text" name="name" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input);">
+                                            </div>
+
+                                            <div>
+                                                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Email *</label>
+                                                <input type="email" name="email" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input);">
+                                            </div>
+
+                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                                <div>
+                                                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Idade *</label>
+                                                    <input type="number" name="age" min="14" max="100" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input);">
+                                                </div>
+
+                                                <div>
+                                                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Série *</label>
+                                                    <select name="grade" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input);">
+                                                        <option value="">Selecione</option>
+                                                        <option value="1º ano">1º ano</option>
+                                                        <option value="2º ano">2º ano</option>
+                                                        <option value="3º ano">3º ano</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Por que deseja se inscrever? *</label>
+                                                <textarea name="motivation" required placeholder="Conte-nos sobre seus objetivos educacionais..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input); min-height: 100px; resize: vertical; font-family: inherit;"></textarea>
+                                            </div>
+
+                                            <button type="submit" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: var(--color-primary); color: var(--color-primary-foreground); padding: 0.75rem; border-radius: var(--radius); border: none; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease;">
+                                                📤 Inscrever-se
+                                            </button>
+                                        </form>
+                                    </div><div style="background-color: var(--color-card); padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow);">
+                                        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--color-foreground); margin-bottom: 1.5rem;">Envie uma Mensagem</h2>
+                                        <form onsubmit="app.submitContact(event); return false;" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                            <div>
+                                                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Nome *</label>
+                                                <input type="text" name="name" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input);">
+                                            </div>
+
+                                            <div>
+                                                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Email *</label>
+                                                <input type="email" name="email" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input);">
+                                            </div>
+
+                                            <div>
+                                                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Assunto *</label>
+                                                <input type="text" name="subject" required placeholder="Ex: Dúvida sobre videoaulas" style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input);">
+                                            </div>
+
+                                            <div>
+                                                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-foreground); margin-bottom: 0.5rem;">Mensagem *</label>
+                                                <textarea name="message" required placeholder="Escreva sua mensagem aqui..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius); font-size: 0.95rem; color: var(--color-foreground); background-color: var(--color-input); min-height: 120px; resize: vertical; font-family: inherit;"></textarea>
+                                            </div>
+
+                                            <button type="submit" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: var(--color-primary); color: var(--color-primary-foreground); padding: 0.75rem; border-radius: var(--radius); border: none; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease;">
+                                                📤 Enviar Mensagem
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderLogin() {
+                return `
+                    <div class="login-page">
+                        <div class="login-container">
+                            <div class="login-card">
+                                <div class="login-header">
+                                    <h1 class="login-title">Viva em Rede</h1>
+                                    <p class="login-subtitle">Faça login na sua conta</p>
+                                </div>
+
+                                <div class="demo-info">
+                                    <p class="demo-title">🎓 Conta Demo</p>
+                                    <p class="demo-text">Email: <strong>demo@vivaemedrede.com</strong></p>
+                                    <p class="demo-text">Senha: <strong>demo123</strong></p>
+                                </div>
+
+                                <form onsubmit="app.handleLogin(event); return false;" class="login-form">
+                                    <div class="form-group">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" name="email" placeholder="seu@email.com" required class="form-input">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Senha</label>
+                                        <input type="password" name="password" placeholder="••••••••" required class="form-input">
+                                    </div>
+
+                                    <button type="submit" class="submit-btn">🔓 Entrar</button>
+                                </form>
+
+                                <div class="login-footer">
+                                    <p class="login-footer-text">
+                                        Não tem uma conta?
+                                        <button class="toggle-btn" onclick="alert('Você pode criar uma conta usando qualquer email e senha'); return false;">Inscreva-se</button>
+                                    </p>
+                                </div>
+
+                                <a href="#" class="back-link" onclick="app.navigate('home'); return false;">← Voltar para Home</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderDashboard() {
+                const stats = {
+                    watchedVideos: 5,
+                    scheduledClasses: 2,
+                    favoriteVideos: 3
+                };
+
+                return `
+                    <div class="page">
+                        <div class="container">
+                            <div class="dashboard-header">
+                                <div>
+                                    <h1 class="page-title">Bem-vindo, ${this.user.name}!</h1>
+                                    <p class="page-subtitle">Acompanhe seu progresso educacional</p>
+                                </div>
+                                <button class="logout-btn" onclick="app.logout(); return false;">🚪 Sair</button>
+                            </div>
+
+                            <div class="user-info-grid">
+                                <div class="user-info-card">
+                                    <span class="user-info-label">Série:</span>
+                                    <span class="user-info-value">${this.user.grade}</span>
+                                </div>
+                                <div class="user-info-card">
+                                    <span class="user-info-label">Membro desde:</span>
+                                    <span class="user-info-value">${new Date(this.user.joinDate).toLocaleDateString('pt-BR')}</span>
+                                </div>
+                                <div class="user-info-card">
+                                    <span class="user-info-label">Email:</span>
+                                    <span class="user-info-value">${this.user.email}</span>
+                                </div>
+                            </div>
+
+                            <div class="stats-grid-dashboard">
+                                <div class="stat-card-dashboard">
+                                    <div class="stat-icon">📚</div>
+                                    <div>
+                                        <div class="stat-number">${stats.watchedVideos}</div>
+                                        <div class="stat-label">Videoaulas Assistidas</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card-dashboard">
+                                    <div class="stat-icon">📅</div>
+                                    <div>
+                                        <div class="stat-number">${stats.scheduledClasses}</div>
+                                        <div class="stat-label">Aulas Agendadas</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card-dashboard">
+                                    <div class="stat-icon">❤️</div>
+                                    <div>
+                                        <div class="stat-number">${stats.favoriteVideos}</div>
+                                        <div class="stat-label">Videoaulas Favoritas</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card-dashboard">
+                                    <div class="stat-icon">📈</div>
+                                    <div>
+                                        <div class="stat-number">${Math.round((stats.watchedVideos / 10) * 100)}%</div>
+                                        <div class="stat-label">Progresso Geral</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <h2 class="section-title-dashboard">Próximas Aulas Agendadas</h2>
+                                <div class="empty-state">
+                                    <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
+                                    <p>Você ainda não agendou nenhuma aula.</p>
+                                    <a href="#" class="empty-link" onclick="app.navigate('professores'); return false;">Agendar uma aula agora</a>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <h2 class="section-title-dashboard">Dicas para Aproveitar ao Máximo</h2>
+                                <div class="tips-list">
+                                    <div class="tip-card">
+                                        <div class="tip-number">1</div>
+                                        <h3 class="tip-title">Assista Regularmente</h3>
+                                        <p class="tip-text">Dedique tempo diário para assistir videoaulas e consolidar seu aprendizado</p>
+                                    </div>
+                                    <div class="tip-card">
+                                        <div class="tip-number">2</div>
+                                        <h3 class="tip-title">Agende Aulas</h3>
+                                        <p class="tip-text">Tire suas dúvidas agendando aulas com nossos professores qualificados</p>
+                                    </div>
+                                    <div class="tip-card">
+                                        <div class="tip-number">3</div>
+                                        <h3 class="tip-title">Participe de Aulas Extras</h3>
+                                        <p class="tip-text">Inscreva-se nas vagas de aulas extras em nossas escolas parceiras</p>
+                                    </div>
+                                    <div class="tip-card">
+                                        <div class="tip-number">4</div>
+                                        <h3 class="tip-title">Mantenha o Foco</h3>
+                                        <p class="tip-text">Estabeleça metas e acompanhe seu progresso regularmente</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            // Handlers
+            handleLogin(event) {
+                event.preventDefault();
+                const form = event.target;
+                const email = form.email.value;
+                const password = form.password.value;
+
+                if (this.login(email, password)) {
+                    this.navigate('dashboard');
+                } else {
+                    alert('Email ou senha inválidos');
+                }
+            },
+
+            scheduleTeacher(name) {
+                if (!this.user) {
+                    this.navigate('login');
+                    return;
+                }
+                alert(`Aula com ${name} agendada com sucesso!`);
+            },
+
+            requestSchool(name) {
+                if (!this.user) {
+                    this.navigate('login');
+                    return;
+                }
+                alert(`Solicitação de vaga enviada para ${name}! Você será contatado em breve.`);
+            },
+
+            playVideo(title, thumbnail) {
+                alert(`Reproduzindo: ${title}`);
+            },
+
+            submitSignup(event) {
+                event.preventDefault();
+                const form = event.target;
+                const data = {
+                    name: form.name.value,
+                    email: form.email.value,
+                    age: form.age.value,
+                    grade: form.grade.value,
+                    motivation: form.motivation.value,
+                    date: new Date().toISOString()
+                };
+                const submissions = JSON.parse(localStorage.getItem('vivaemedrede_signups') || '[]');
+                submissions.push(data);
+                localStorage.setItem('vivaemedrede_signups', JSON.stringify(submissions));
+                alert('Inscrição enviada com sucesso! Entraremos em contato em breve.');
+                form.reset();
+            },
+
+            submitContact(event) {
+                event.preventDefault();
+                const form = event.target;
+                const data = {
+                    name: form.name.value,
+                    email: form.email.value,
+                    subject: form.subject.value,
+                    message: form.message.value,
+                    date: new Date().toISOString()
+                };
+                const submissions = JSON.parse(localStorage.getItem('vivaemedrede_contacts') || '[]');
+                submissions.push(data);
+                localStorage.setItem('vivaemedrede_contacts', JSON.stringify(submissions));
+                alert('Mensagem enviada com sucesso! Responderemos em breve.');
+                form.reset();
+            }
+        };
+
+        // Initialize app
+        app.init();
+    </script>
 </body>
 </html>
